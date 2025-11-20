@@ -1,0 +1,165 @@
+/* Expense Tracker Styles */
+.expense-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.expense-form, .meal-count-form {
+  margin-bottom: 2rem;
+}
+
+.expense-history, .meal-count-history {
+  margin-top: 2rem;
+}
+
+.expense-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.expense-summary {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+}
+
+.summary-stats {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  min-width: 150px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.meal-inputs {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.meal-input {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.meal-input label {
+  margin-bottom: 0.5rem;
+}
+
+.date-range-selector {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.calculation-results {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.result-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  min-width: 150px;
+}
+
+.result-label {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.result-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+th {
+  background-color: rgba(0,0,0,0.2);
+  font-weight: 600;
+}
+
+tr:hover {
+  background-color: rgba(255,255,255,0.05);
+}
+
+.member-summary {
+  margin-top: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .expense-sections {
+    grid-template-columns: 1fr;
+  }
+  
+  .summary-stats, .calculation-results {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .stat-item, .result-item {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .meal-inputs {
+    flex-direction: column;
+  }
+  
+  .date-range-selector {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .date-range-selector input, .date-range-selector button {
+    width: 100%;
+  }
+}
