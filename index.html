@@ -1,0 +1,188 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MESS-MATE</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><i class="fas fa-utensils"></i> MESS-MATE</div>
+    <nav>
+      <a href="#members"><i class="fas fa-users"></i> Members</a>
+      <a href="#tasks"><i class="fas fa-tasks"></i> Tasks</a>
+      <a href="#meals"><i class="fas fa-hamburger"></i> Meals</a>
+      <a href="#expenses"><i class="fas fa-calculator"></i> Expenses</a>
+      <a href="#debts"><i class="fas fa-money-bill-wave"></i> Debts</a>
+      <a href="#notice"><i class="fas fa-bullhorn"></i> Notice Board</a>
+
+    </nav>
+  </header>
+
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>Welcome to MESS-MATE</h1>
+      <p>The ultimate solution for managing your mess or hostel living experience</p>
+      <button class="cta-button" id="get-started-btn">Get Started</button>
+    </div>
+  </div>
+
+  <div id="notice-ticker" class="notice-ticker"><div class="ticker-track"></div></div>
+  <div class="features-section">
+    <h2 class="section-title">Why Choose MESS-MATE?</h2>
+    <div class="features-container">
+      <div class="feature-card">
+        <i class="fas fa-calendar-alt feature-icon"></i>
+        <h3>Meal Planning</h3>
+        <p>Plan your meals within budget and track expenses efficiently</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-clipboard-list feature-icon"></i>
+        <h3>Task Management</h3>
+        <p>Assign and track cleaning and maintenance tasks fairly</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-calculator feature-icon"></i>
+        <h3>Expense Tracking</h3>
+        <p>Keep track of shared expenses and settle debts easily</p>
+      </div>
+    </div>
+  </div>
+<div class="dashboard-intro">
+      <h3>Manage Your Mess</h3>
+      <p>Welcome to your MESS-MATE dashboard! Here you can access all the tools you need to manage your mess efficiently.</p>
+    </div>
+  <main class="dashboard-section" id="dashboard">
+    
+    <section id="profile-info" class="card">
+      <h2>Your Profile</h2>
+      <p><strong>Name:</strong> <span id="current-user-name"></span></p>
+      <p><strong>Email:</strong> <span id="current-user-email"></span></p>
+      <p><strong>Role:</strong> <span id="current-user-role"></span></p>
+      <p><strong>Mess:</strong> <span id="current-mess-id"></span></p>
+      <button type="button" id="profile-details-btn" onclick="window.location.href='profile.html'">Details</button>
+    </section>
+    
+    <section id="members-overview" class="card">
+      <h2>Members Overview</h2>
+      <ul id="members-overview-list"></ul>
+    </section>
+    
+    <section id="members" class="card">
+      <div class="card-icon"><i class="fas fa-users"></i></div>
+      <h2>Manage Members</h2>
+      <p>Add, remove, and manage all members of your mess</p>
+      <button onclick="window.location.href='members.html'">Remove Member</button>
+    </section>
+    <section id="tasks" class="card">
+      <div class="card-icon"><i class="fas fa-tasks"></i></div>
+      <h2>Task Scheduler</h2>
+      <p>Create and assign cleaning and maintenance tasks</p>
+      <button onclick="window.location.href='tasks.html'">Assign Tasks</button>
+    </section>
+    <section id="meals" class="card">
+      <div class="card-icon"><i class="fas fa-hamburger"></i></div>
+      <h2>Meal Planner</h2>
+      <p>Plan meals, track expenses, and stay within budget</p>
+      <button onclick="window.location.href='meals.html'">Plan Meals</button>
+    </section>
+    <section id="expenses" class="card">
+      <div class="card-icon"><i class="fas fa-calculator"></i></div>
+      <h2>Expense Tracker</h2>
+      <p>Track daily bazar costs and calculate meal rates</p>
+      <button onclick="window.location.href='expenses.html'">Track Expenses</button>
+    </section>
+    
+    <!-- Add Deposit Section -->
+    <section id="deposits" class="card">
+      <div class="card-icon"><i class="fas fa-wallet"></i></div>
+      <h2>Add Deposit</h2>
+      <p>Record member deposits to settle balances</p>
+      <form id="deposit-form">
+        <div style="display:flex; gap: var(--spacing-sm); flex-wrap: wrap; margin-bottom: var(--spacing-sm)">
+          <select id="deposit-member" required style="flex:1; min-width: 180px">
+            <option value="">Select member</option>
+          </select>
+          <input type="number" id="deposit-amount" placeholder="Amount" required style="flex:1; min-width: 140px">
+          <input type="date" id="deposit-date" required style="flex:1; min-width: 160px">
+        </div>
+        <button type="submit">Add Deposit</button>
+        <button type="button" id="view-deposit-history">Deposit History</button>
+      </form>
+      <!-- Deposit history moved to deposits.html -->>
+    </section>
+    
+    <section id="debts" class="card">
+      <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
+      <h2>Debt Tracker</h2>
+      <p>Keep track of who owes what to whom</p>
+      <form id="debt-form">
+        <div style="display:flex; gap: var(--spacing-sm); flex-wrap: wrap; margin-bottom: var(--spacing-sm)">
+          <select id="debt-from" required style="flex:1; min-width: 180px">
+            <option value="">From whom money was received</option>
+          </select>
+          <input type="number" id="debt-amount" placeholder="Amount" required style="flex:1; min-width: 140px">
+        </div>
+        <button type="submit">Add Debt</button>
+      </form>
+      <div id="debt-requests" style="margin-top: var(--spacing-sm)">
+        <strong>Pending Requests:</strong> <span id="debt-request-count">0</span>
+        <div id="debt-requests-list"></div>
+      </div>
+      <!-- Debt history table removed per request; only the Add Debt form remains -->
+    </section>
+    <section id="notice" class="card">
+      <div class="card-icon"><i class="fas fa-bullhorn"></i></div>
+      <h2>Notice Board</h2>
+      <p>Share important announcements with all members</p>
+      <textarea placeholder="Post an update..."></textarea>
+      <button>Post</button>
+    </section>
+  </main>
+  
+  <div class="testimonials-section" id="reviews">
+    <h2 class="section-title">What Our Users Say</h2>
+    <form id="review-form" class="card" style="margin-bottom: var(--spacing-md)">
+      <input id="review-name" type="text" placeholder="Your Name" required>
+      <input id="review-university" type="text" placeholder="University" required>
+      <input id="review-time" type="text" placeholder="Time (University)" readonly>
+      <textarea id="review-text" placeholder="Write your review..." required></textarea>
+      <button type="submit">Submit Review</button>
+    </form>
+    <div id="reviews-list" class="testimonials-container"></div>
+  </div>
+
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3><i class="fas fa-utensils"></i> MESS-MATE</h3>
+        <p>Making mess management simple and efficient for  students.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <a href="#members">Members</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#meals">Meals</a>
+        <a href="#debts">Debts</a>
+      </div>
+      <div class="footer-section">
+        <h3>Contact Us</h3>
+        <p><i class="fas fa-envelope"></i> support@messmate.com</p>
+        <p><i class="fas fa-phone"></i> +8801722207398</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 MESS-MATE | All Rights Reserved</p>
+    </div>
+  </footer>
+
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
+  <script src="index.js"></script>
+</body>

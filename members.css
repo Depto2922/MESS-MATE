@@ -1,0 +1,29 @@
+/* Member Management Styles */
+.member-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+.member-form {
+  margin-bottom: var(--spacing-xl);
+}
+
+.member-list {
+  margin-top: var(--spacing-xl);
+}
+
+.member-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  background: var(--bg-light);
+  border-radius: var(--border-radius-sm);
+}
+
+.member-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+}
