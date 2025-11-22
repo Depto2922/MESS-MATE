@@ -31,6 +31,7 @@
         window.firebaseApp = firebase.initializeApp(window.FIREBASE_CONFIG);
         window.firebaseAuth = window.firebaseApp.auth();
         window.firestore = window.firebaseApp.firestore();
+        try { window.firestore.settings({ experimentalForceLongPolling: true }); } catch (e) { console.warn('Firestore settings error', e); }
         console.log('Firebase initialized');
         try { window.firebaseAuth.onAuthStateChanged(function(user){ window.currentFirebaseUser = user || null; console.log('Auth state:', user ? 'signed in' : 'signed out'); }); } catch(e) { console.warn('Auth state listener error', e); }
       } catch (e) {
@@ -250,6 +251,4 @@ async function deleteTask(id) {
   }
 }
 
-// And so on for all other features...
-// This is a simplified example of the rewrite.
-// The full file would be much longer.
+
