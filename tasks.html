@@ -32,7 +32,7 @@
         <input type="text" id="task-name" placeholder="Task Name" required>
         <select id="assigned-to" required>
           <option value="">Select Member</option>
-          <!-- Members will be populated from localStorage -->
+          <!-- Members will be populated from DB -->
         </select>
         <input type="date" id="due-date" required>
         <textarea id="task-description" placeholder="Task Description" rows="3"></textarea>
@@ -53,7 +53,10 @@
   </footer>
 
   <script src="firebase-config.js"></script>
-<script src="script.js"></script>
-<script src="tasks.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="db.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
