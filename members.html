@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +27,29 @@
     <button class="back-button" onclick="window.location.href='index.html'">← Back to Dashboard</button>
     
     <h1>Manage Members</h1>
+
+    <div class="card member-form" id="add-member-card">
+        <h2>Add New Member</h2>
+        <form id="member-form">
+            <div class="form-group">
+                <label for="member-name">Name</label>
+                <input type="text" id="member-name" required>
+            </div>
+            <div class="form-group">
+                <label for="member-email">Email</label>
+                <input type="email" id="member-email" required>
+            </div>
+            <div class="form-group">
+                <label for="member-phone">Phone</label>
+                <input type="tel" id="member-phone">
+            </div>
+            <div class="form-group">
+                <label for="member-notes">Notes</label>
+                <textarea id="member-notes"></textarea>
+            </div>
+            <button type="submit">Add Member</button>
+        </form>
+    </div>
     
     <div class="card member-form">
       <h2>Remove Member</h2>
@@ -45,6 +69,10 @@
   </footer>
 
   <script src="firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="db.js"></script>
   <script src="script.js"></script>
   <script src="members.js"></script>
 </body>
