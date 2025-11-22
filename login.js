@@ -40,19 +40,53 @@ function runLoginScript() {
         });
     };
 
+    // *** NEW, MORE ROBUST SESSION VALIDATION ***
+    async function validateUserMessSession(uid, email) {
+        if (!uid || !email) return null;
+        const prefRef = firestore.collection('user_preferences').doc(uid);
+        try {
+            const prefDoc = await prefRef.get();
+            if (prefDoc.exists) {
+                const messId = prefDoc.data().activeMessId;
+                if (!messId) return null;
+
+                // Validate that the user is actually a member of this mess.
+                const memberQuery = await firestore.collection('messes').doc(messId).collection('members')
+                    .where('email', '==', email)
+                    .limit(1).get();
+
+                if (!memberQuery.empty) {
+                    // Valid session! User has a preference and is a member.
+                    return { messId };
+                } else {
+                    // Stale preference found. The user is no longer a member of that mess.
+                    console.warn("Stale mess preference found and deleted for user:", uid);
+                    await prefRef.delete(); // Clean up the bad preference data.
+                    return null;
+                }
+            }
+            return null; // No preference document found.
+        } catch (e) {
+            console.error("Error validating user mess session:", e);
+            return null;
+        }
+    }
+
     // Main logic based on auth state
     firebaseAuth.onAuthStateChanged(async (user) => {
         if (user) {
-            const userPref = await getUserPreference(user.uid);
-            if (userPref && userPref.activeMessId) {
-                window.location.href = 'index.html';
+            const messSession = await validateUserMessSession(user.uid, user.email);
+            if (messSession) {
+                window.location.href = 'index.html'; // Session is valid, proceed.
             } else {
+                // No valid mess session, show the create/join UI.
                 hide(authSection);
                 show(postAuthSection);
                 hide(createMessForm);
                 hide(joinMessForm);
             }
         } else {
+            // User is logged out, show the login UI.
             hide(postAuthSection);
             show(authSection);
             showLogin();
@@ -80,7 +114,6 @@ function runLoginScript() {
         try {
             const cred = await firebaseAuth.createUserWithEmailAndPassword(email, password);
             if (cred.user) await cred.user.updateProfile({ displayName: name });
-            // onAuthStateChanged will handle the UI transition
         } catch (err) { signupError.textContent = err.message; }
     });
 
@@ -96,7 +129,6 @@ function runLoginScript() {
         }
         try {
             await firebaseAuth.signInWithEmailAndPassword(email, password);
-            // onAuthStateChanged will handle redirection
         } catch (err) { loginError.textContent = err.message; }
     });
 
@@ -141,12 +173,9 @@ function runLoginScript() {
                 return;
             }
 
-            // Create mess document
             await messRef.set({ password: messPassword, createdBy: user.uid, createdAt: new Date() });
-            // ***FIXED***: Add manager to the correct nested 'members' collection
             await messRef.collection('members').add({ email: user.email, name: user.displayName, role: 'manager', joinDate: new Date() });
-            // Set active mess preference
-            await setUserPreference(user.uid, { activeMessId: messId });
+            await firestore.collection('user_preferences').doc(user.uid).set({ activeMessId: messId });
 
             window.location.href = 'index.html';
         } catch (err) { createMessError.textContent = 'Failed to create mess: ' + err.message; }
@@ -177,33 +206,10 @@ function runLoginScript() {
                 return;
             }
 
-            // ***FIXED***: Add user to the correct nested 'members' collection
             await messRef.collection('members').add({ email: user.email, name: user.displayName, role: 'member', joinDate: new Date() });
-            // Set active mess preference
-            await setUserPreference(user.uid, { activeMessId: messId });
+            await firestore.collection('user_preferences').doc(user.uid).set({ activeMessId: messId });
 
             window.location.href = 'index.html';
         } catch (err) { joinMessError.textContent = 'Failed to join mess: ' + err.message; }
     });
-
-    // Firestore helpers for user preferences
-    async function getUserPreference(uid) {
-        if (!uid) return null;
-        try {
-            const doc = await firestore.collection('user_preferences').doc(uid).get();
-            return doc.exists ? doc.data() : null;
-        } catch (e) {
-            console.error("Failed to get user preference", e);
-            return null;
-        }
-    }
-
-    async function setUserPreference(uid, data) {
-        if (!uid) return;
-        try {
-            await firestore.collection('user_preferences').doc(uid).set(data, { merge: true });
-        } catch (e) {
-            console.error("Failed to set user preference", e);
-        }
-    }
 }
