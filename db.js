@@ -1,281 +1,139 @@
 // db.js
-
 (function(window) {
-  'use strict';
+    'use strict';
 
-  const db = () => window.firestore;
-  const auth = () => window.firebaseAuth;
+    const db = () => window.firestore;
 
-  function getMessId() {
-    const currentMess = JSON.parse(localStorage.getItem('currentMess'));
-    return currentMess ? currentMess.messId : null;
-  }
+    // Helper to get a collection for a given mess
+    const getCollection = (messId, collectionName) => {
+        return db().collection('messes').doc(messId).collection(collectionName);
+    };
 
-  // Members
-  async function getMembers() {
-    const messId = getMessId();
-    if (!messId) return [];
-    const snapshot = await db().collection('messes').doc(messId).collection('members').get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
+    // Members
+    async function getMembers(messId) {
+        if (!messId) return [];
+        const snapshot = await getCollection(messId, 'members').get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
 
-  async function addMember(member) {
-    const messId = getMessId();
-    if (!messId) return null;
-    return await db().collection('messes').doc(messId).collection('members').add(member);
-  }
+    async function addMember(messId, member) {
+        if (!messId) return null;
+        return await getCollection(messId, 'members').add(member);
+    }
 
-  async function updateMember(memberId, member) {
-    const messId = getMessId();
-    if (!messId) return;
-    await db().collection('messes').doc(messId).collection('members').doc(memberId).update(member);
-  }
+    async function deleteMember(messId, memberId) {
+        if (!messId) return;
+        await getCollection(messId, 'members').doc(memberId).delete();
+    }
 
-  async function deleteMember(memberId) {
-    const messId = getMessId();
-    if (!messId) return;
-    await db().collection('messes').doc(messId).collection('members').doc(memberId).delete();
-  }
-  
-  // Expenses
-  async function getExpenses() {
-    const messId = getMessId();
-    if (!messId) return [];
-    const snapshot = await db().collection('messes').doc(messId).collection('expenses').orderBy('date', 'desc').get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
+    // Expenses
+    async function getExpenses(messId) {
+        if (!messId) return [];
+        const snapshot = await getCollection(messId, 'expenses').orderBy('date', 'desc').get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
 
-  async function addExpense(expense) {
-    const messId = getMessId();
-    if (!messId) return null;
-    return await db().collection('messes').doc(messId).collection('expenses').add(expense);
-  }
+    async function addExpense(messId, expense) {
+        if (!messId) return null;
+        return await getCollection(messId, 'expenses').add(expense);
+    }
 
-  async function updateExpense(expenseId, expense) {
-    const messId = getMessId();
-    if (!messId) return;
-    await db().collection('messes').doc(messId).collection('expenses').doc(expenseId).update(expense);
-  }
+    async function deleteExpense(messId, expenseId) {
+        if (!messId) return;
+        await getCollection(messId, 'expenses').doc(expenseId).delete();
+    }
 
-  async function deleteExpense(expenseId) {
-    const messId = getMessId();
-    if (!messId) return;
-    await db().collection('messes').doc(messId).collection('expenses').doc(expenseId).delete();
-  }
-  
-  // Meal Counts
-  async function getMealCounts() {
-    const messId = getMessId();
-    if (!messId) return [];
-    const snapshot = await db().collection('messes').doc(messId).collection('mealCounts').orderBy('date', 'desc').get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
+    // Deposits
+    async function getDeposits(messId) {
+        if (!messId) return [];
+        const snapshot = await getCollection(messId, 'deposits').orderBy('date', 'desc').get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
 
-  async function addMealCount(mealCount) {
-    const messId = getMessId();
-    if (!messId) return null;
-    return await db().collection('messes').doc(messId).collection('mealCounts').add(mealCount);
-  }
+    async function addDeposit(messId, deposit) {
+        if (!messId) return null;
+        return await getCollection(messId, 'deposits').add(deposit);
+    }
 
-  async function deleteMealCount(mealCountId) {
-    const messId = getMessId();
-    if (!messId) return;
-    await db().collection('messes').doc(messId).collection('mealCounts').doc(mealCountId).delete();
-  }
+    async function deleteDeposit(messId, depositId) {
+        if (!messId) return;
+        await getCollection(messId, 'deposits').doc(depositId).delete();
+    }
 
-  // Deposits
-  async function getDeposits() {
-    const messId = getMessId();
-    if (!messId) return [];
-    const snapshot = await db().collection('messes').doc(messId).collection('deposits').orderBy('date', 'desc').get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
+    // Tasks
+    async function getTasks(messId) {
+        if (!messId) return [];
+        const snapshot = await getCollection(messId, 'tasks').orderBy('dueDate', 'desc').get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
 
-  async function addDeposit(deposit) {
-    const messId = getMessId();
-    if (!messId) return null;
-    return await db().collection('messes').doc(messId).collection('deposits').add(deposit);
-  }
+    async function addTask(messId, task) {
+        if (!messId) return null;
+        return await getCollection(messId, 'tasks').add(task);
+    }
 
-  async function updateDeposit(depositId, deposit) {
-    const messId = getMessId();
-    if (!messId) return;
-    await db().collection('messes').doc(messId).collection('deposits').doc(depositId).update(deposit);
-  }
+    async function updateTask(messId, taskId, task) {
+        if (!messId) return;
+        await getCollection(messId, 'tasks').doc(taskId).update(task);
+    }
 
-  async function deleteDeposit(depositId) {
-    const messId = getMessId();
-    if (!messId) return;
-    await db().collection('messes').doc(messId).collection('deposits').doc(depositId).delete();
-  }
+    async function deleteTask(messId, taskId) {
+        if (!messId) return;
+        await getCollection(messId, 'tasks').doc(taskId).delete();
+    }
 
-  // Shared Expenses
-  async function getSharedExpenses() {
-      const messId = getMessId();
-      if (!messId) return [];
-      const snapshot = await db().collection('messes').doc(messId).collection('sharedExpenses').orderBy('date', 'desc').get();
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
+    // Notices
+    async function getNotices(messId) {
+        if (!messId) return [];
+        const snapshot = await getCollection(messId, 'notices').orderBy('date', 'desc').get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
 
-  async function addSharedExpense(expense) {
-      const messId = getMessId();
-      if (!messId) return null;
-      return await db().collection('messes').doc(messId).collection('sharedExpenses').add(expense);
-  }
+    async function addNotice(messId, notice) {
+        if (!messId) return null;
+        return await getCollection(messId, 'notices').add(notice);
+    }
 
-  async function updateSharedExpense(expenseId, expense) {
-      const messId = getMessId();
-      if (!messId) return;
-      await db().collection('messes').doc(messId).collection('sharedExpenses').doc(expenseId).update(expense);
-  }
+    async function deleteNotice(messId, noticeId) {
+        if (!messId) return;
+        await getCollection(messId, 'notices').doc(noticeId).delete();
+    }
+    
+    // Meals
+    async function getMeals(messId) {
+        if (!messId) return {};
+        const snapshot = await getCollection(messId, 'meals').get();
+        const meals = {};
+        snapshot.docs.forEach(doc => {
+            meals[doc.id] = doc.data();
+        });
+        return meals;
+    }
 
-  async function deleteSharedExpense(expenseId) {
-      const messId = getMessId();
-      if (!messId) return;
-      await db().collection('messes').doc(messId).collection('sharedExpenses').doc(expenseId).delete();
-  }
+    async function updateMeal(messId, mealDate, mealData) {
+        if (!messId) return;
+        await getCollection(messId, 'meals').doc(mealDate).set(mealData, { merge: true });
+    }
 
-  // Tasks
-  async function getTasks() {
-      const messId = getMessId();
-      if (!messId) return [];
-      const snapshot = await db().collection('messes').doc(messId).collection('tasks').orderBy('dueDate', 'desc').get();
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
-
-  async function addTask(task) {
-      const messId = getMessId();
-      if (!messId) return null;
-      return await db().collection('messes').doc(messId).collection('tasks').add(task);
-  }
-
-  async function updateTask(taskId, task) {
-      const messId = getMessId();
-      if (!messId) return;
-      await db().collection('messes').doc(messId).collection('tasks').doc(taskId).update(task);
-  }
-
-  async function deleteTask(taskId) {
-      const messId = getMessId();
-      if (!messId) return;
-      await db().collection('messes').doc(messId).collection('tasks').doc(taskId).delete();
-  }
-
-  // Notices
-  async function getNotices() {
-      const messId = getMessId();
-      if (!messId) return [];
-      const snapshot = await db().collection('messes').doc(messId).collection('notices').orderBy('createdAt', 'desc').get();
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
-
-  async function addNotice(notice) {
-      const messId = getMessId();
-      if (!messId) return null;
-      return await db().collection('messes').doc(messId).collection('notices').add(notice);
-  }
-
-  async function deleteNotice(noticeId) {
-      const messId = getMessId();
-      if (!messId) return;
-      await db().collection('messes').doc(messId).collection('notices').doc(noticeId).delete();
-  }
-
-  // Debts
-  async function getDebts() {
-      const messId = getMessId();
-      if (!messId) return [];
-      const snapshot = await db().collection('messes').doc(messId).collection('debts').orderBy('date', 'desc').get();
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
-
-  async function addDebt(debt) {
-      const messId = getMessId();
-      if (!messId) return null;
-      return await db().collection('messes').doc(messId).collection('debts').add(debt);
-  }
-
-  async function deleteDebt(debtId) {
-      const messId = getMessId();
-      if (!messId) return;
-      await db().collection('messes').doc(messId).collection('debts').doc(debtId).delete();
-  }
-
-  // Debt Requests
-  async function getDebtRequests() {
-      const messId = getMessId();
-      if (!messId) return [];
-      const snapshot = await db().collection('messes').doc(messId).collection('debtRequests').orderBy('date', 'desc').get();
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
-
-  async function addDebtRequest(req) {
-      const messId = getMessId();
-      if (!messId) return null;
-      return await db().collection('messes').doc(messId).collection('debtRequests').add(req);
-  }
-
-   async function updateDebtRequest(reqId, req) {
-      const messId = getMessId();
-      if (!messId) return;
-      await db().collection('messes').doc(messId).collection('debtRequests').doc(reqId).update(req);
-  }
-
-  // Reviews
-  async function getReviews() {
-      const snapshot = await db().collection('reviews').orderBy('createdAt', 'desc').get();
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
-
-  async function addReview(review) {
-      return await db().collection('reviews').add(review);
-  }
-
-  async function updateReview(reviewId, review) {
-      await db().collection('reviews').doc(reviewId).update(review);
-  }
-
-  async function deleteReview(reviewId) {
-      await db().collection('reviews').doc(reviewId).delete();
-  }
-  
-  window.db = {
-    getMembers,
-    addMember,
-    updateMember,
-    deleteMember,
-    getExpenses,
-    addExpense,
-    updateExpense,
-    deleteExpense,
-    getMealCounts,
-    addMealCount,
-    deleteMealCount,
-    getDeposits,
-    addDeposit,
-    updateDeposit,
-    deleteDeposit,
-    getSharedExpenses,
-    addSharedExpense,
-    updateSharedExpense,
-    deleteSharedExpense,
-    getTasks,
-    addTask,
-    updateTask,
-    deleteTask,
-    getNotices,
-    addNotice,
-    deleteNotice,
-    getDebts,
-    addDebt,
-    deleteDebt,
-    getDebtRequests,
-    addDebtRequest,
-    updateDebtRequest,
-    getReviews,
-    addReview,
-    updateReview,
-    deleteReview,
-  };
+    window.db = {
+        getMembers,
+        addMember,
+        deleteMember,
+        getExpenses,
+        addExpense,
+        deleteExpense,
+        getDeposits,
+        addDeposit,
+        deleteDeposit,
+        getTasks,
+        addTask,
+        updateTask,
+        deleteTask,
+        getNotices,
+        addNotice,
+        deleteNotice,
+        getMeals,
+        updateMeal,
+    };
 
 })(window);
